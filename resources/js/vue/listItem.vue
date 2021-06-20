@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { EventBus } from './event-bus';
+
 export default {
     props: ['item'],
     methods: {
@@ -49,7 +51,7 @@ export default {
                 item: this.item.id
             })
             .then(response => {
-                alert(response.data.name);
+                EventBus.$emit('name_task', response.data);
             })
             .catch( error => {
                 alert(error);
@@ -76,6 +78,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        font-size: 25px;
     }
     .itemText{
         width: 100%;

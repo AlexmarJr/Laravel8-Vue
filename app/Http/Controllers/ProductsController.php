@@ -13,11 +13,21 @@ class ProductsController extends Controller
     }
 
     public function store(Request $request){
-        $new = new Products;
-        $new->name = $request->item["name"];
-        $new->save(); 
+        if($request->item["id"]){
+            $head = Products::find($request->item["id"]);
 
-        return $new;
+            $head->name = $request->item["name"];
+            $head->save();
+            return "Item Atualizado";
+        }
+        else{
+            $new = new Products;
+            $new->name = $request->item["name"];
+            $new->save(); 
+    
+            return "Item Criado";
+        }
+        
     }
 
     public function update(Request $request, $id){

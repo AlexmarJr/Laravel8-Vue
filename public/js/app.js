@@ -11981,6 +11981,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _event_bus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./event-bus */ "./resources/js/vue/event-bus.js");
 //
 //
 //
@@ -11994,10 +11995,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       item: {
+        id: null,
         name: ""
       }
     };
@@ -12013,7 +12017,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('api/item/store', {
         item: this.item
       }).then(function (response) {
-        if (response.status == 201) {
+        if (response.status == 200) {
+          _this.item.id = null;
           _this.item.name = "";
 
           _this.$emit('reloadlist');
@@ -12022,6 +12027,14 @@ __webpack_require__.r(__webpack_exports__);
         alert(error);
       });
     }
+  },
+  created: function created() {
+    var _this2 = this;
+
+    _event_bus__WEBPACK_IMPORTED_MODULE_0__.EventBus.$on('name_task', function (data) {
+      _this2.item.name = data.name;
+      _this2.item.id = data.id;
+    });
   }
 });
 
@@ -12110,6 +12123,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _event_bus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./event-bus */ "./resources/js/vue/event-bus.js");
 //
 //
 //
@@ -12124,6 +12138,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['item'],
   methods: {
@@ -12157,7 +12172,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('api/item/' + this.item.id, {
         item: this.item.id
       }).then(function (response) {
-        alert(response.data.name);
+        _event_bus__WEBPACK_IMPORTED_MODULE_0__.EventBus.$emit('name_task', response.data);
       })["catch"](function (error) {
         alert(error);
       });
@@ -12310,6 +12325,23 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/vue/event-bus.js":
+/*!***************************************!*\
+  !*** ./resources/js/vue/event-bus.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "EventBus": () => (/* binding */ EventBus)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+
+var EventBus = new vue__WEBPACK_IMPORTED_MODULE_0__.default();
 
 /***/ }),
 
@@ -16795,7 +16827,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.completed[data-v-1d1939b8]{\n    text-decoration: line-through;\n    color: gray\n}\n.trash[data-v-1d1939b8]{\n    background-color: white;\n    color: red\n}\n.trash[data-v-1d1939b8]{\n    background-color: white;\n    color: blue\n}\n.item[data-v-1d1939b8]{\n    display: flex;\n    justify-content: center;\n    align-items: center;\n}\n.itemText[data-v-1d1939b8]{\n    width: 100%;\n    margin-left: 20px;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.completed[data-v-1d1939b8]{\n    text-decoration: line-through;\n    color: gray\n}\n.trash[data-v-1d1939b8]{\n    background-color: white;\n    color: red\n}\n.trash[data-v-1d1939b8]{\n    background-color: white;\n    color: blue\n}\n.item[data-v-1d1939b8]{\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    font-size: 25px;\n}\n.itemText[data-v-1d1939b8]{\n    width: 100%;\n    margin-left: 20px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -48835,6 +48867,27 @@ var render = function() {
               return
             }
             _vm.$set(_vm.item, "name", $event.target.value)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.item.id,
+            expression: "item.id"
+          }
+        ],
+        attrs: { type: "hidden" },
+        domProps: { value: _vm.item.id },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.item, "id", $event.target.value)
           }
         }
       }),
